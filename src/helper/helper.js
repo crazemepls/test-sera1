@@ -6,6 +6,8 @@ const generateStringFromArray = (data, type) => {
       return data.map(group => group.pokemon.name).join(', ');
     case 'evolvesTo':
       return data?.map(group => group?.species?.name).join(', ');
+    default:
+      return 'Specify type name'
   }
 }
 

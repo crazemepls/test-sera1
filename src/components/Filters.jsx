@@ -22,7 +22,7 @@ const FilterButtons = ({ pokemonTypes, handleButtonClick, selectedType }) => {
               type="text"
               size="large"
               onClick={() => handleButtonClick(type.id)}
-              style={{ padding: 0, background: 'none', border: type.id === selectedType ? '#1677FF solid 10px' : '' , height:'56px'}}
+              style={{ padding: 0, background: 'none', border: type.id === selectedType ? '#F6F1E9 solid 10px' : '' , height:'56px'}}
             >
               <img
                 src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-viii/legends-arceus/${type.id}.png`}
