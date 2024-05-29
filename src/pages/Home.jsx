@@ -23,7 +23,6 @@ const HomePage = () => {
   const [selectedPokemonObj, setSelectedPokemonObj] = useState(null)
   const [loadingDetail, setLoadingDetail] = useState(false)
 
-
   const handleIntersection = (entry) => {
     if (haveMore) {
       setLoading(true)
@@ -168,7 +167,7 @@ const HomePage = () => {
               />
             }
           >
-            <Meta title={pokemon?.name} />
+            <Meta title={pokemon?.name} style={{textAlign:'center', textTransform:'capitalize'}}/>
           </Card>
         </List.Item>
       )}
