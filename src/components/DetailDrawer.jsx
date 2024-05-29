@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Space, List, Button, Drawer, Skeleton, Table, Typography, Carousel, Tooltip, Tabs, Row } from "antd"
 import PokemonService from "../service/pokemon";
+import Helper from "../helper/helper";
 
 const DetailDrawer = ({ selectedPokemonObj, onCloseDrawer, openDrawer, loadingDetail }) => {
   const [speciesDetail, setSpeciesDetail] = useState(null)
-  const [evoChain, setEvoChain] = useState()
+  const [evoChain, setEvoChain] = useState(null)
+  console.log(selectedPokemonObj)
+
+  const parts = selectedPokemonObj.species.url.split('/');
+  const speciesId = parts[parts.length - 2];
+
+  const isBaby = !!speciesDetail?.is_baby
+  const isMythical = !!speciesDetail?.is_mythical
+  const isLegendary = !!speciesDetail?.is_legendary
 
   const contentStyle = {
     margin: 0,
@@ -15,20 +24,8 @@ const DetailDrawer = ({ selectedPokemonObj, onCloseDrawer, openDrawer, loadingDe
     background: '#364d79',
   };
 
-  const flattenObject = (obj, parent = '', res = []) => {
-    for (let key in obj) {
-      let propName = parent ? `${parent}.${key}` : key;
-      if (typeof obj[key] === 'object' && obj[key] !== null) {
-        flattenObject(obj[key], propName, res);
-      } else if (obj[key] !== null) {
-        res.push({ name: propName, url: obj[key] });
-      }
-    }
-    return res;
-  };
-
   const generateImage = (image) => {
-    const flattenedData = flattenObject(image.sprites);
+    const flattenedData = Helper.flattenObject(image.sprites);
     return (
       <div style={{ width: '400px' }}>
         <Carousel autoplay>
@@ -43,6 +40,7 @@ const DetailDrawer = ({ selectedPokemonObj, onCloseDrawer, openDrawer, loadingDe
                     alt={imageData.name}
                     style={{ display: 'block' }}
                   />
+                  <Typography>{'alt: ' + imageData.name}</Typography>
                 </Tooltip>
               </div>
             ))
@@ -84,7 +82,7 @@ const DetailDrawer = ({ selectedPokemonObj, onCloseDrawer, openDrawer, loadingDe
         return <List.Item>
           <Space
             key={stat.stat.url}
-          ><Typography><a href={stat.stat.url}>{stat.stat.name + ' : ' + stat.base_stat}</a></Typography></Space>
+          ><Typography>{stat.stat.name + ' : ' + stat.base_stat}</Typography></Space>
         </List.Item>
       }}
     />
@@ -112,18 +110,6 @@ const DetailDrawer = ({ selectedPokemonObj, onCloseDrawer, openDrawer, loadingDe
     />
   }
 
-  const generateStringFromArray = (data, type) => {
-    switch (type) {
-      case 'eggGroup':
-        return data.map(group => group.name).join(', ');
-      case 'varieties':
-        return data.map(group => group.pokemon.name).join(', ');
-      case 'evolvesTo':
-        console.log(data)
-        return data?.map(group => group?.species?.name).join(', ');
-    }
-  }
-
   const generatePokemonSpeciesDetail = (speciesDetail) => {
     return <Space
       size="small"
@@ -134,19 +120,22 @@ const DetailDrawer = ({ selectedPokemonObj, onCloseDrawer, openDrawer, loadingDe
         key={speciesDetail?.id}
         direction="vertical"
       >
-        <Typography>{"Capture Rate" + ' : ' + speciesDetail?.capture_rate}</Typography>
-        <Typography>{"Color" + ' : ' + speciesDetail?.color.name}</Typography>
-        <Typography>{"Generation" + ' : ' + speciesDetail?.generation.name}</Typography>
-        <Typography>{"Habitat" + ' : ' + speciesDetail?.habitat.name}</Typography>
-        <Typography>{"Egg Group" + ' : ' + generateStringFromArray(speciesDetail?.egg_groups, 'eggGroup')}</Typography>
-        <Typography>{"Varieties" + ' : ' + generateStringFromArray(speciesDetail?.varieties, 'varieties')}</Typography>
+        <Typography>{"Capture Rate : " + speciesDetail?.capture_rate}</Typography>
+        <Typography>{"Color : " + speciesDetail?.color.name}</Typography>
+        <Typography>{"Shape : " + speciesDetail?.shape.name}</Typography>
+        <Typography>{"Generation : " + speciesDetail?.generation?.name}</Typography>
+        <Typography>{"Habitat : " + (speciesDetail?.habitat?.name || '-')}</Typography>
+        <Typography>{"Egg Group : " + Helper.generateStringFromArray(speciesDetail?.egg_groups, 'eggGroup')}</Typography>
+        <Typography>{"Varieties : " + Helper.generateStringFromArray(speciesDetail?.varieties, 'varieties')}</Typography>
+        {isBaby && <Typography>{"This pokemon is a baby!"}</Typography>}
+        {isMythical && <Typography>{"This pokemon is a Mythical Pokemon!"}</Typography>}
+        {isLegendary && <Typography>{"This pokemon is a Legendary Pokemon!"}</Typography>}
       </Space>
     </Space>
   }
 
-
   const getSpeciesDetail = async () => {
-    await PokemonService.getPokemonSpeciesDetail(selectedPokemonObj.id)
+    await PokemonService.getPokemonSpeciesDetail(speciesId)
       .then((res) => {
         setSpeciesDetail(res.data)
       })
@@ -241,8 +230,10 @@ const DetailDrawer = ({ selectedPokemonObj, onCloseDrawer, openDrawer, loadingDe
                           }}
                         >
                           <Typography>{"Evolution chain url" + ' : ' + speciesDetail?.evolution_chain.url}</Typography>
-                          <Typography>{"Evolves from" + ' : ' + (speciesDetail?.evolves_from_species?.name ? speciesDetail?.evolves_from_species?.name : '-')}</Typography>
-                          <Typography>{"Evolves to" + ' : ' + generateStringFromArray(evoChain?.chain.evolves_to, 'evolvesTo')}</Typography>
+                          <Typography>
+                            {"Evolves from" + ' : ' + (speciesDetail?.evolves_from_species?.name ? speciesDetail?.evolves_from_species?.name : '-')}
+                          </Typography>
+                          <Typography>{"Evolves to" + ' : ' + Helper.generateStringFromArray(evoChain?.chain.evolves_to, 'evolvesTo')}</Typography>
                         </div>
                       </Space>
                     </div>
@@ -252,9 +243,7 @@ const DetailDrawer = ({ selectedPokemonObj, onCloseDrawer, openDrawer, loadingDe
             </Tabs>
           </div>
       }
-
     </Drawer>
-
   )
 }
 

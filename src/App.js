@@ -1,5 +1,5 @@
 import React from 'react';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Layout, Menu, theme } from 'antd';
 import HomePage from './pages/Home';
 
 const { Header, Content, Footer } = Layout;
@@ -14,7 +14,7 @@ const App = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   return (
-    <Layout>
+    <Layout style={{background:'#C3C3C3'}}>
       <Header
         style={{
           display: 'flex',
@@ -38,21 +38,12 @@ const App = () => {
           padding: '0 48px',
         }}
       >
-        {/* ///////////////////////////////////////////// BREADCRUMB*/}
-        {/* <Breadcrumb
-          style={{
-            margin: '16px 0',
-          }}
-        >
-          <Breadcrumb.Item>Home</Breadcrumb.Item> 
-
-        </Breadcrumb> */}
         <div
           style={{
-            background: colorBgContainer,
+            background: '#C3C3C3',
             minHeight: 280,
             padding: 24,
-            borderRadius: borderRadiusLG,
+            // borderRadius: borderRadiusLG,
           }}
         >
           <HomePage />
