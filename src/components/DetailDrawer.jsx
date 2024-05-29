@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Space, List, Button, Drawer, Skeleton, Table, Typography, Carousel, Tooltip, Tabs, Row } from "antd"
+import { Space, List, Drawer, Skeleton, Typography, Carousel, Tooltip, Tabs } from "antd"
 import PokemonService from "../service/pokemon";
 import Helper from "../helper/helper";
 
 const DetailDrawer = ({ selectedPokemonObj, onCloseDrawer, openDrawer, loadingDetail }) => {
   const [speciesDetail, setSpeciesDetail] = useState(null)
   const [evoChain, setEvoChain] = useState(null)
-  console.log(selectedPokemonObj)
 
   const parts = selectedPokemonObj.species.url.split('/');
   const speciesId = parts[parts.length - 2];
@@ -47,7 +46,6 @@ const DetailDrawer = ({ selectedPokemonObj, onCloseDrawer, openDrawer, loadingDe
           }
         </Carousel>
       </div>
-
     )
   }
 
@@ -121,8 +119,8 @@ const DetailDrawer = ({ selectedPokemonObj, onCloseDrawer, openDrawer, loadingDe
         direction="vertical"
       >
         <Typography>{"Capture Rate : " + speciesDetail?.capture_rate}</Typography>
-        <Typography>{"Color : " + speciesDetail?.color.name}</Typography>
-        <Typography>{"Shape : " + speciesDetail?.shape.name}</Typography>
+        <Typography>{"Color : " + speciesDetail?.color?.name}</Typography>
+        <Typography>{"Shape : " + (speciesDetail?.shape?.name || '-')}</Typography>
         <Typography>{"Generation : " + speciesDetail?.generation?.name}</Typography>
         <Typography>{"Habitat : " + (speciesDetail?.habitat?.name || '-')}</Typography>
         <Typography>{"Egg Group : " + Helper.generateStringFromArray(speciesDetail?.egg_groups, 'eggGroup')}</Typography>
@@ -150,12 +148,14 @@ const DetailDrawer = ({ selectedPokemonObj, onCloseDrawer, openDrawer, loadingDe
 
   useEffect(() => {
     getSpeciesDetail()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
     if (speciesDetail?.evolution_chain?.url) {
       getEvolutionChain()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [speciesDetail])
 
   return (
@@ -229,11 +229,11 @@ const DetailDrawer = ({ selectedPokemonObj, onCloseDrawer, openDrawer, loadingDe
                             borderRadius: '24px',
                           }}
                         >
-                          <Typography>{"Evolution chain url" + ' : ' + speciesDetail?.evolution_chain.url}</Typography>
+                          <Typography>{"Evolution chain url : " + speciesDetail?.evolution_chain.url}</Typography>
                           <Typography>
-                            {"Evolves from" + ' : ' + (speciesDetail?.evolves_from_species?.name ? speciesDetail?.evolves_from_species?.name : '-')}
+                            {"Evolves from : " + (speciesDetail?.evolves_from_species?.name ? speciesDetail?.evolves_from_species?.name : '-')}
                           </Typography>
-                          <Typography>{"Evolves to" + ' : ' + Helper.generateStringFromArray(evoChain?.chain.evolves_to, 'evolvesTo')}</Typography>
+                          <Typography>{"Evolves to : " + Helper.generateStringFromArray(evoChain?.chain.evolves_to, 'evolvesTo')}</Typography>
                         </div>
                       </Space>
                     </div>

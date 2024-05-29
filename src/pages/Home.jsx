@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Space, List, Image, Skeleton, Divider, Button, Drawer } from "antd"
+import { Card, Space, List, Image} from "antd"
 import PokemonService from "../service/pokemon";
 import FilterButtons from "../components/Filters";
 import useIntersectionObserver from "../hooks/useIntersectionObserver";
@@ -41,6 +41,7 @@ const HomePage = () => {
     setSelectedPokemonObj(null)
   };
 
+  //autofetch if ref is visible on screen
   const setRef = useIntersectionObserver(handleIntersection, { threshold: 0.1 });
 
   const getPokemons = async () => {
@@ -121,21 +122,25 @@ const HomePage = () => {
 
   useEffect(() => {
     getPokemons()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedType])
 
   useEffect(() => {
     getPokemonTypes()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
     if (selectedPokemon !== null) {
       getPokemonDetail()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedPokemon])
 
 
   useEffect(() => {
     loadMoreData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <Space direction="vertical">
@@ -156,7 +161,7 @@ const HomePage = () => {
           <Card
             key={pokemon.id}
             hoverable
-            style={{ width: 180 }}
+            style={{ width: 180, background:'#F6F1E9' }}
             onClick={() => onShowDrawer(pokemon.id)}
             cover={
               <Image alt="image"
@@ -167,6 +172,7 @@ const HomePage = () => {
               />
             }
           >
+            {/* I guess I could add some details, like pokemon type and else, but it will be expensive since it will calls one by one */}
             <Meta title={pokemon?.name} style={{textAlign:'center', textTransform:'capitalize'}}/>
           </Card>
         </List.Item>

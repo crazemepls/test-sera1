@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout, Menu, theme } from 'antd';
+import { Layout, Menu } from 'antd';
 import HomePage from './pages/Home';
 
 const { Header, Content, Footer } = Layout;
@@ -10,11 +10,8 @@ const items = new Array(1).fill(null).map((_, index) => ({
 }));
 
 const App = () => {
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
   return (
-    <Layout style={{background:'#C3C3C3'}}>
+    <Layout style={{background:'#a63d40'}}>
       <Header
         style={{
           display: 'flex',
@@ -36,11 +33,14 @@ const App = () => {
       <Content
         style={{
           padding: '0 48px',
+          width:'90%',
+          justifyContent:'center',
+          margin:'auto'
         }}
       >
         <div
           style={{
-            background: '#C3C3C3',
+            background: '#a63d40',
             minHeight: 280,
             padding: 24,
             // borderRadius: borderRadiusLG,
