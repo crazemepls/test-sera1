@@ -54,7 +54,7 @@ const App = () => {
           textAlign: 'center',
         }}
       >
-        {/* BlahBlah */}
+        BlahBlah
       </Footer>
     </Layout>
   );
